@@ -377,3 +377,184 @@ else:
     print("all good!")
 finally:
     print("We can clean up resources here")
+
+# Instead of try/finally to cleanup resources you can use a with statement
+with open("myfile.txt") as f:
+    for line in f:
+        print(line)
+
+# An iterable is an object that can be treated as a sequence.
+filled_dict = {"one": 1, "two": 2, "three": 3}
+our_iterable = filled_dict.keys()
+print(our_iterable)
+
+# loop over it
+for i in our_iterable:
+    print(i)
+
+# However we cannot address elements by index.
+our_iterable[1]  # Raises a TypeError
+#now our_iterable[1] can return 'two'
+
+our_iterator = iter(our_iterable)
+
+next(our_iterator) # 'one'
+next(our_iterator) # 'two'
+next(our_iterator) # 'three'
+
+next(our_iterator) # Raises StopIteration
+
+# You can grab all the elements of an iterator by calling list() on it.
+list(filled_dict.keys())
+
+####################################################
+## 4. Functions
+####################################################
+
+# Use "def" to create new functions
+def add(x, y):
+    print("x is {} and y is {}".format(x, y))
+    return x + y
+# Calling functions with parameters
+add(5, 6) # prints out "x is 5 and y is 6" and returns 11
+#keyword arguments
+add(y = 6, x = 5)
+
+def varargs(*args): #多个位置参数
+    return args
+
+varargs(1, 2, 3) # (1, 2, 3)
+
+def keyword_args(**kwargs): # 多个关键字参数
+    return kwargs
+
+keyword_args(big = "foot", loch = "ness") # {"big": "foot", "loch": "ness"}
+
+def all_the_args(*args, **kwargs): #同时
+    print(args)
+    print(kwargs)
+"""
+all_the_args(1, 2, a=3, b=4) prints:
+    (1, 2)
+    {"a": 3, "b": 4}
+"""
+
+args= (1, 2, 3, 4)
+kwargs = {"a": 3, "b": 4}
+all_the_args(*args) # equivalent to all_the_args(1, 2, 3, 4)
+all_the_args(**kwargs) #equivalent to all_the_args(a=3, b=4)
+all_the_args(*args, **kwargs) #equivalent to all_the_args(1, 2, 3, 4, a=3, b=4)
+
+# Returning multiple values (with tuple assignments)
+def swap(x, y):
+    return y, x
+
+
+x = 1
+y = 2
+x, y = swap(x, y) # x, y = y, x , x = 2, y = 1
+
+# function scope
+x = 5 # global var x
+def set_x(num):
+    x = num # local var x, x = arg num = 43
+    print(x)
+
+def set_global_x(num):
+    global x # x = 5
+    print(x)
+    x = num # local var x, x = arg num = 6
+    print(x)
+
+set_x(43)
+set_global_x(6)
+
+# Python has first class functions
+def create_adder(x):
+    def adder(y):
+        return x + y
+    return adder # 外层函数返回里层函数
+
+add_10 = create_adder(10) #add_10 is adder(y): return 10 + y
+add_10(3) # return 13
+
+# There are also anonymous functions, 第二个括号是函数调用，括号里的是传递给函数的实参
+(lambda x: x > 2)(3) # 3 > 2, True
+(lambda x, y: x ** 2 + y ** 2)(2, 1) # 5
+
+# There are built-in higher order functions
+list(map(add_10, [1, 2, 3])) # 10+1, 10+2, 10+3 [11, 12, 13]
+list(map(max, [1, 2, 3], [4, 2, 1])) # [4, 2, 3]
+list(filter(lambda x: x > 5, [3, 4, 5, 6, 7])) #[6, 7]
+
+#List comprehension 列表综合式
+[add_10(i) for i in [1, 2, 3]] # [11, 12 ,13]
+[x for x in [3, 4, 5, 6, 7] if x > 5] # [6, 7]
+
+#set and dict comprehensions
+{x for x in 'abcddeef' if x not in 'abc'} #{'d', 'e', 'f'} set集合
+{x: x**2 for x in range(5)} # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+
+####################################################
+## 5. Modules
+####################################################
+
+import math
+print(math.sqrt(16)) # 4.0
+
+from math import ceil, floor
+print(ceil(3.7)) # 4.0 向上取整
+print(floor(3.7)) # 3.0 向下取整
+
+# You can import all functions from a module.
+# Warning: this is not recommended
+from math import *
+
+import math as m
+math.sqrt(16) == m.sqrt(16)
+
+# Python modules are just ordinary Python files. You
+# can write your own, and import them. The name of the
+# module is the same as the name of the file.
+
+# You can find out which functions and attributes
+# are defined in a module.
+import math
+dir(math)
+
+# If you have a Python script named math.py in the same
+# folder as your current script, the file math.py will
+# be loaded instead of the built-in Python module.
+# This happens because the local folder has priority
+# over Python's built-in libraries.
+#本地文件夹里的文件优先级高于内置python库
+
+####################################################
+## 6. Classes
+####################################################
+class Human:
+    species = "H. sapiens   # A class attribute.
+    def __init__(self, name):
+        self.name = name
+        self.age = 0 # Initialize property
+    # An instance method. All methods take "self" as the first argument
+    def say(self, msg):
+        print("{name}: {message}".format(name = self.name, message = msg))
+    # Another instance method
+    def sing(self):
+        return "yo... yo... microphone check... one two... one two..."
+
+    @classmethod
+    def get_species(cls):
+        return cls.species
+
+    # A static method is called without a class or instance reference静态方法
+    @staticmethod
+    def grunt():
+        return "*grunt*"
+
+    @property
+    def age(self):
+        return self._age
+
+    
