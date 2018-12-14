@@ -552,9 +552,99 @@ class Human:
     @staticmethod
     def grunt():
         return "*grunt*"
-
+# A property is just like a getter.
+# It turns the method age() into an read-only attribute of the same name.
+# There's no need to write trivial(琐碎的) getters and setters in Python, though.
     @property
     def age(self):
         return self._age
 
-    
+    # a setter
+    @age.setter
+    def age(self, age):
+        return self._age
+
+    @age.deleter
+    def age(self):
+        def self._age
+
+# When a Python interpreter reads a source file it executes all its code.
+# This __name__ check makes sure this code block is only executed when this
+# module is the main program.
+if __name__ == '__main__':
+    # Instaniate a class
+    i = Human(name = "Ian")
+    i.say("hi")
+    j = Huam("Joel")
+    j.say("hello")
+    # call class method
+    i.say(i.get_species())
+    # set new attributes
+    Human.species = "H. neanderhalensis"
+    i.say(get_species())
+    j.say(j.get_species())
+
+    # call static method
+    print(Human.grunt()) #"*grunt*"
+
+# Cannot call static method with instance of object
+# because i.grunt() will automatically put "self" (the object i) as an argument
+    print(i.grunt()) # TypeError:grunt() takes 0 positional arguments but 1 was given
+    # i.grunt() == grunt(i) i is self
+
+    # Update the property(属性) for this instance
+    i.age = 42
+    i.say(i.age)
+    j.say(j.age)
+    del i.age # AttributeError
+
+####################################################
+## 6.1 Inheritance
+####################################################
+
+# human.py
+from human import Human
+
+class Superhero(Human):
+    species = 'Superhuman'
+    def __init__(self, name, movie = False, superpowers=["super strength", "bulletproofing"])
+        # add additional class attributes
+        self.fictional = True
+        self.movie = movie
+        self.superpowers = superpowers
+        # The "super" function lets you access the parent class's methods
+        super().__init__(name)
+
+    # override the sing method
+    def sing(self):
+        return "Dun, dun, dun!"
+
+    def boast(self):
+        for power in self.superpowers:
+            print("I wield the power of {pow}!".format(pow=power))
+
+if __name__ == '__main__':
+    sup = Superhero(name = "trick")
+    #Instancee type Check
+    if isinstance(sup, Human):
+        print("I am human")
+    if type(sup) is Superhero:
+        print('I am a superhero')
+
+# get the method resolution search order used by bpth getattr() and super()
+    print(Superhero.__mro__)
+    print(sup.get_species())
+    print(sup.sing())
+    sup.say('spoon')
+    sup.boast()
+    sup.age =31
+    print(sup.age)
+    # Attribute that only exists within Superhero
+    print("Am I oscar eligiable?" + str(sup.movie))
+
+####################################################
+## 6.2 Multiple Inheritance
+####################################################
+
+# Another class definition
+# bat.py
