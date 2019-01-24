@@ -648,3 +648,6 @@ if __name__ == '__main__':
 
 # Another class definition
 # bat.py
+class Bat:
+    species = 'Baty'
+    def __init__(self, can_fly)
